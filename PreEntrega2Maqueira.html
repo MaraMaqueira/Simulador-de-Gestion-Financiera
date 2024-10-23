@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ingresos y Gastos</title>
+    <script src="PreEntrega2Maqueira.js"></script>
+</head>
+<body>
+    <h1>Simulador de Gestión Financiera</h1>
+
+    <!-- BIENVENIDO -->
+    <div id="userGreeting" style="margin-bottom: 20px;"></div>
+
+    <!-- INICIO DE SESIÓN -->
+    <h2>Inicio de Sesión y Registro</h2>
+    <button onclick="register()">Registrar Usuario</button>
+    <button onclick="login()">Iniciar Sesión</button>
+
+    <!-- INGRESOS -->
+    <h2>Gestión de Ingresos</h2>
+    <button onclick="crearCategoria()">Crear Categoría de Ingresos</button>
+    <button onclick="agregaringresos()">Agregar Ingresos</button>
+    <button onclick="verIngresos()">Ver Ingresos</button>
+    <button onclick="buscarIngresosPorNombre()">Buscar Ingresos por Nombre</button>
+    <button onclick="filtrarIngresosPorCategoria()">Filtrar Ingresos por Categoría</button>
+    <button onclick="filtrarIngresosPorFecha()">Filtrar Ingresos por Fecha</button>
+
+    <!-- GASTOS -->
+    <h2>Gestión de Gastos</h2>
+    <button onclick="crearCategoriaGastos()">Crear Categoría de Gastos</button>
+    <button onclick="agregargastos()">Agregar Gastos</button>
+    <button onclick="verGastos()">Ver Gastos</button>
+    <button onclick="buscarGastosPorNombre()">Buscar Gastos por Nombre</button>
+    <button onclick="filtrarGastosPorCategoria()">Filtrar Gastos por Categoría</button>
+    <button onclick="filtrarGastosPorFecha()">Filtrar Gastos por Fecha</button>
+
+    <!-- AHORROS Y PRESUPUESTOS -->
+    <h2>Ahorros y Presupuestos</h2>
+    <div>
+    <button onclick="presupuesto()">Agregar Presupuesto para un gasto</button>
+    <button onclick="presupuestoVsGastos()">Comparar Presupuesto con Gastos</button>
+    </div>
+    
+    <div>
+        <button onclick="guardarAhorro()">Guardar Ahorro</button>
+        <button onclick="establecerObjetivo()">Crear Objetivo para Ahorro</button>
+        <button onclick="compararAhorrosConObjetivo()">Comparar Ahorro con Objetivo</button>
+    </div>
+</body>
+</html>
+
+
