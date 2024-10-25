@@ -1,40 +1,61 @@
-// INICIO DE SESION Y REGISTRO
-let usuarios = [];
+// LOGIN Y REGISTRO
 
-function register() {
-    const nombredeusuario = prompt('Cree su nombre de usuario:');
-    const contraseña = prompt('Ingrese su nueva contraseña:');
+function register(event) {
+    event.preventDefault();
 
-    if (nombredeusuario === null || contraseña === null) {
-        alert('No se puede registrar un usuario sin nombre o contraseña.');
+    const nombredeusuario = document.getElementById('nombredeusuario').value.trim();
+    const contraseña = document.getElementById('contraseña').value.trim();
+
+    if (!nombredeusuario || !contraseña) {
+        document.getElementById('error').textContent = "Por favor, complete todos los campos.";
         return;
     }
 
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
     if (usuarios.some(u => u.nombredeusuario === nombredeusuario)) {
-        alert('Ya existe ese nombre de usuario.');
+        document.getElementById('error').textContent = "Ya existe ese nombre de usuario.";
         return;
     }
 
     usuarios.push({ nombredeusuario, contraseña });
-    alert('Registro exitoso.');
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+    alert("Registro exitoso.");
+    window.location.href = "login.html"; 
 }
 
-function login() {
-    const nombredeusuario = prompt('Ingrese su nombre de usuario:');
-    const contraseña = prompt('Ingrese su contraseña:');
+function login(event) {
+    event.preventDefault();
+    
+    const nombredeusuario = document.getElementById('nombredeusuario').value.trim();
+    const contraseña = document.getElementById('contraseña').value.trim();
 
-    if (nombredeusuario === null || contraseña === null) {
-        alert('No se puede iniciar sesión sin nombre o contraseña.');
-        return;
-    }
 
-    const usuario = usuarios.find(u => u.nombredeusuario === nombredeusuario && u.contraseña === contraseña);
-    if (usuario) {
-        alert('Inicio de sesión exitoso.');
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+
+    const usuarioEncontrado = usuarios.find(u => u.nombredeusuario === nombredeusuario && u.contraseña === contraseña);
+
+    if (usuarioEncontrado) {
+
+        localStorage.setItem('nombreUsuario', nombredeusuario);
+
+        alert("Inicio de sesión exitoso.");
+        window.location.href = "dashboard.html"; 
     } else {
-        alert('Usuario o contraseña incorrectos.');
+        document.getElementById('error').textContent = "Usuario o contraseña incorrectos.";
     }
 }
+
+function iniciarsesion() {
+    window.location.href = "login.html"; 
+}
+
+function registerRedirect() {
+    window.location.href = "registro_cliente.html";
+}
+
 
 // INGRESOS Y CATEGORIAS
 let categoria = [];
@@ -286,7 +307,7 @@ function filtrarGastosPorFecha() {
 
 function gastosDelMesActual() {
     const fechaActual = new Date();
-    const mesActual = fechaActual.getMonth() + 1; // Los meses en JavaScript son 0-11
+    const mesActual = fechaActual.getMonth() + 1; 
     const añoActual = fechaActual.getFullYear();
 
     const resultados = gastos.filter(entry => {
@@ -342,6 +363,7 @@ function gastosDesdeHasta() {
     alert(resultadosBusqueda);
 }
 
+//PRESUPUESTO
 function presupuesto() {
     const categoriaPresupuesto = prompt('Ingrese la categoría para el presupuesto:');
     if (!categoriasGastos.includes(categoriaPresupuesto)) {
@@ -365,7 +387,7 @@ function presupuesto() {
 
         if (entry.Categoria === categoriaPresupuesto) {
             if (tipoPeriodo === 'semanal') {
-                const fechaInicioSemana = new Date(fechaActual.setDate(fechaActual.getDate() - fechaActual.getDay())); // Primer día de la semana
+                const fechaInicioSemana = new Date(fechaActual.setDate(fechaActual.getDate() - fechaActual.getDay())); 
                 return fechaGasto >= fechaInicioSemana;
             } else if (tipoPeriodo === 'mensual') {
                 return fechaGasto.getMonth() === fechaActual.getMonth() && fechaGasto.getFullYear() === fechaActual.getFullYear();
@@ -391,58 +413,8 @@ function presupuesto() {
     }
 }
 
-function presupuestoVsGastos() {
-    const categoriaPresupuesto = prompt('Ingrese la categoría para comparar presupuesto vs gasto:');
-    if (!categoriasGastos.includes(categoriaPresupuesto)) {
-        alert('La categoría no existe. Primero crea la categoría.');
-        return;
-    }
 
-    const presupuesto = parseFloat(prompt('Ingrese el presupuesto asignado:'));
-    if (isNaN(presupuesto) || presupuesto <= 0) {
-        alert('Debe ingresar un presupuesto válido mayor que 0.');
-        return;
-    }
-
-    const fechaInicio = prompt('Ingrese la fecha de inicio (DD/MM/AAAA):');
-    const fechaFinal = prompt('Ingrese la fecha final (DD/MM/AAAA):');
-    
-    if (!fechaInicio || !fechaFinal) {
-        alert('Debe ingresar tanto una fecha de inicio como una fecha final.');
-        return;
-    }
-
-    const [diaInicio, mesInicio, añoInicio] = fechaInicio.split('/');
-    const [diaFinal, mesFinal, añoFinal] = fechaFinal.split('/');
-
-    const inicio = new Date(`${añoInicio}-${mesInicio}-${diaInicio}`);
-    const final = new Date(`${añoFinal}-${mesFinal}-${diaFinal}`);
-
-    const resultados = gastos.filter(entry => {
-        const [dia, mes, año] = entry.Fecha.split('/');
-        const fechaGasto = new Date(`${año}-${mes}-${dia}`);
-        return entry.Categoria === categoriaPresupuesto && fechaGasto >= inicio && fechaGasto <= final;
-    });
-
-    if (resultados.length === 0) {
-        alert(`No se encontraron gastos en la categoría '${categoriaPresupuesto}' entre ${fechaInicio} y ${fechaFinal}.`);
-        return;
-    }
-
-    let totalGastos = 0;
-    resultados.forEach(entry => {
-        totalGastos += parseFloat(entry.Monto);
-    });
-
-    const diferencia = presupuesto - totalGastos;
-    if (diferencia >= 0) {
-        alert(`Te queda $${diferencia} en tu presupuesto. Gastaste $${totalGastos} de tu presupuesto de $${presupuesto} en la categoría '${categoriaPresupuesto}' entre ${fechaInicio} y ${fechaFinal}.`);
-    } else {
-        alert(`Has excedido tu presupuesto en $${Math.abs(diferencia)}. Gastaste $${totalGastos} de tu presupuesto de $${presupuesto} en la categoría '${categoriaPresupuesto}' entre ${fechaInicio} y ${fechaFinal}.`);
-    }
-}
-
-
+//AHORROS
 let ahorros = []; 
 
 function guardarAhorro() {
@@ -468,8 +440,7 @@ function guardarAhorro() {
     alert(`Ahorro de $${montoAhorro} en la categoría '${categoriaAhorro}' guardado exitosamente.`);
 }
 
-let objetivos = []; // Array para guardar los objetivos de ahorro
-
+let objetivos = []; 
 function establecerObjetivo() {
     const categoriaObjetivo = prompt('Ingrese la categoría del objetivo de ahorro:');
     if (categoriaObjetivo === null || categoriaObjetivo.trim() === "") {
