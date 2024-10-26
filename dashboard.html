@@ -8,10 +8,10 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #ededed;
         }
         .header {
-            background-color: #ffffff;
+            background-color: #051d40;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
@@ -27,8 +27,8 @@
         }
         .logout-button {
             padding: 8px 16px;
-            background-color: #051d40;
-            color: white;
+            background-color: #c0392b;
+            color: #ededed;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -70,6 +70,12 @@
             font-weight: bold;
             font-size: 18px;
         }
+        .user-info {
+         color: white;          
+         font-size: 24px;     
+         font-weight: bold;    
+  }
+
     </style>
 </head>
 <body>
@@ -103,12 +109,12 @@
             userInfoElement.textContent = `¡Hola, ${nombreUsuario}!`;
         } else {
             alert('Debe iniciar sesión para acceder a esta página.');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         }
 
         function logout() {
             localStorage.removeItem('nombreUsuario'); 
-            window.location.href = 'login.html'; 
+            window.location.href = 'index.html'; 
         }
     </script>
 </body>
