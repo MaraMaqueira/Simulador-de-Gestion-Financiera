@@ -2,8 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finanzas Claras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMU7zY7B1dfNY9Tv1k5JzCuD9ZO6LRF4YiRMjRN" crossorigin="anonymous">
     <style>
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -23,6 +26,8 @@
             height: 50px;
         }
         .user-info {
+            color: white;
+            font-size: 24px;
             font-weight: bold;
         }
         .logout-button {
@@ -70,41 +75,43 @@
             font-weight: bold;
             font-size: 18px;
         }
-        .user-info {
-         color: white;          
-         font-size: 24px;     
-         font-weight: bold;    
-  }
-
     </style>
 </head>
 <body>
+
     <header class="header">
         <img src="logo.jpeg" alt="Logo Finanzas Claras" class="logo">
         <div id="user-info" class="user-info"></div>
         <button class="logout-button" onclick="logout()">Cerrar sesión</button>
     </header>
+    
     <main class="main-content">
         <div class="button-container">
+
             <button class="big-button" onclick="window.location.href='registrar.html'" aria-label="Registrar Gastos e Ingresos">
-                <span class="button-icon">💰</span>
+                <span class="button-icon"><i class="fa-solid fa-sack-dollar fa-bounce"></i></span>
                 <span class="button-text">Registrar Gastos e Ingresos</span>
             </button>
+            
             <button class="big-button" onclick="window.location.href='preyaho.html'" aria-label="Presupuestos y Ahorros">
-                <span class="button-icon">💼</span>
+                <span class="button-icon"><i class="fa-solid fa-wallet"></i></span>
                 <span class="button-text">Presupuestos y Ahorros</span>
             </button>
+            
             <button class="big-button" onclick="window.location.href='analisis.html'" aria-label="Análisis Financiero">
-                <span class="button-icon">📊</span>
+                <span class="button-icon"><i class="fa-solid fa-chart-line"></i></span>
                 <span class="button-text">Análisis</span>
             </button>
         </div>
     </main>
 
+
     <script>
+
         const nombreUsuario = localStorage.getItem('nombreUsuario');
         const userInfoElement = document.getElementById('user-info');
         
+
         if (nombreUsuario) {
             userInfoElement.textContent = `¡Hola, ${nombreUsuario}!`;
         } else {
@@ -119,4 +126,3 @@
     </script>
 </body>
 </html>
-
