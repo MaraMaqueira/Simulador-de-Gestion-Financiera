@@ -3,34 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Ingresos y Gastos</title>
+    <title>Gestión Financiera</title>
     <script src="PreEntrega2Maqueira.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #e2e2e2;
+        }
+        .button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
 </head>
 <body>
-    <h1>Aqui se igresaran los ingresos y gastos, tendra filtros y busquedas, se vera en una tabla</h1>
+    <h1>Gestión Financiera</h1>
+
+    <h2>Ingresos</h2>
+    <button class="button" onclick="agregaringresos()">Agregar Ingreso</button>
+
+    <h1>Tabla de Ingresos</h1>
+    <table id="tablaIngresos" border="1">
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Salario</td>
+                <td>Ingreso mensual</td>
+                <td>1500</td>
+                <td>01/10/2024</td>
+            </tr>
+            <tr>
+                <td>Freelance</td>
+                <td>Trabajo extra</td>
+                <td>500</td>
+                <td>15/10/2024</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Gastos</h2>
+    <button class="button" onclick="agregargastos()">Agregar Gasto</button>
+
+    <h1>Tabla de Gastos</h1>
+    <table id="tablaGastos" border="1">
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Comida</td>
+                <td>Compra de supermercado</td>
+                <td>2000</td>
+                <td>26/10/2024</td>
+            </tr>
+            <tr>
+                <td>Transporte</td>
+                <td>Pasaje del autobus</td>
+                <td>50</td>
+                <td>26/10/2024</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const ingresos = [
+            { Categoria: "Salario", Descripcion: "Ingreso mensual", Monto: 45000, Fecha: "01/10/2024" },
+            { Categoria: "Freelance", Descripcion: "Trabajo extra", Monto: 5000, Fecha: "15/10/2024" }
+        ];
+
+        const gastos = [
+            { Categoria: "Comida", Descripcion: "Compra de supermercado", Monto: 200, Fecha: "26/10/2024" },
+            { Categoria: "Transporte", Descripcion: "Pase del bus", Monto: 50, Fecha: "26/10/2024" }
+        ];
+
+        const categoriasGastos = ["Comida", "Transporte", "Entretenimiento"]; 
 
 
 
+
+        
+        window.onload = function() {
+            actualizarTablaIngresos();
+            actualizarTablaGastos();
+        };
+    
+    </script>
+</body>
+</html>
+<div>
     <h2>Gestión de Ingresos</h2>
     <button onclick="crearCategoria()">Crear Categoría de Ingresos</button>
-    <button onclick="agregaringresos()">Agregar Ingresos</button>
-    <button onclick="verIngresos()">Ver Ingresos</button>
     <button onclick="buscarIngresosPorNombre()">Buscar Ingresos por Nombre</button>
     <button onclick="filtrarIngresosPorCategoria()">Filtrar Ingresos por Categoría</button>
     <button onclick="filtrarIngresosPorFecha()">Filtrar Ingresos por Fecha</button>
     <button onclick="ingresosDesdeHasta()">Ingresos Desde - Hasta</button>
     <button onclick="ingresosDelMesActual()">Ingresos del Mes Actual</button>
-
-    <h2>Gestión de Gastos</h2>
+</div>
+<div>
+<h2>Gestión de Gastos</h2>
     <button onclick="crearCategoriaGastos()">Crear Categoría de Gastos</button>
-    <button onclick="agregargastos()">Agregar Gastos</button>
-    <button onclick="verGastos()">Ver Gastos</button>
     <button onclick="buscarGastosPorNombre()">Buscar Gastos por Nombre</button>
     <button onclick="filtrarGastosPorCategoria()">Filtrar Gastos por Categoría</button>
     <button onclick="filtrarGastosPorFecha()">Filtrar Gastos por Fecha</button>
     <button onclick="gastosDesdeHasta()">Ingresos Desde - Hasta</button>
     <button onclick="gastosDelMesActual()">Ingresos del Mes Actual</button>
-
-    <script src="PreEntrega2Maqueira.js"></script>
-</body>
-</html>
+</div>

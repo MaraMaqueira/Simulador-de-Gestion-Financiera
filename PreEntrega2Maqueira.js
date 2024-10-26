@@ -73,17 +73,28 @@ function crearCategoria() {
 
 function agregaringresos() {
     const buscarcategoria = prompt('Ingrese la categoría del ingreso:');
-    if (!categoria.includes(buscarcategoria)) {
-        alert('Categoría no existe. Primero crea la categoría.');
-        return;
-    }
-
     const descripcion = prompt('Ingrese la descripción del ingreso:');
     const monto = prompt('Ingrese el monto del ingreso:');
     const fecha = prompt('Ingrese la fecha del ingreso (DD/MM/AAAA):');
 
     ingresos.push({ Categoria: buscarcategoria, Descripcion: descripcion, Monto: monto, Fecha: fecha });
     alert('Ingreso añadido exitosamente.');
+
+    actualizarTablaIngresos(); 
+}
+
+
+function actualizarTablaIngresos() {
+    const tablaIngresos = document.getElementById('tablaIngresos').getElementsByTagName('tbody')[0];
+    tablaIngresos.innerHTML = ''; 
+    
+    ingresos.forEach(entry => {
+        const row = tablaIngresos.insertRow();
+        row.insertCell(0).textContent = entry.Categoria;
+        row.insertCell(1).textContent = entry.Descripcion;
+        row.insertCell(2).textContent = entry.Monto;
+        row.insertCell(3).textContent = entry.Fecha;
+    });
 }
 
 function verIngresos() {
@@ -237,7 +248,31 @@ function agregargastos() {
 
     gastos.push({ Categoria: buscarcategoria, Descripcion: descripcion, Monto: monto, Fecha: fecha });
     alert('Gasto añadido exitosamente.');
+
+    actualizarTablaGastos(); 
 }
+
+function actualizarTablaGastos() {
+    const tablaGastos = document.getElementById('tablaGastos').getElementsByTagName('tbody')[0];
+    tablaGastos.innerHTML = ''; 
+
+    gastos.forEach(entry => {
+        const row = tablaGastos.insertRow();
+        row.insertCell(0).textContent = entry.Categoria;
+        row.insertCell(1).textContent = entry.Descripcion;
+        row.insertCell(2).textContent = entry.Monto;
+        row.insertCell(3).textContent = entry.Fecha;
+    });
+}
+
+
+    const descripcion = prompt('Ingrese la descripción del gasto:');
+    const monto = prompt('Ingrese el monto del gasto:');
+    const fecha = prompt('Ingrese la fecha del gasto (DD/MM/AAAA):');
+
+    gastos.push({ Categoria: buscarcategoria, Descripcion: descripcion, Monto: monto, Fecha: fecha });
+    alert('Gasto añadido exitosamente.');
+
 
 function verGastos() {
     if (gastos.length === 0) {
@@ -398,11 +433,7 @@ function presupuesto() {
         return false;
     });
 
-
-    let totalGastos = 0;
-    gastosFiltrados.forEach(entry => {
-        totalGastos += parseFloat(entry.Monto);
-    });
+    let totalGastos = gastosFiltrados.reduce((acc, entry) => acc + parseFloat(entry.Monto), 0);
 
     presupuestoInicial -= totalGastos;
 
@@ -412,6 +443,7 @@ function presupuesto() {
         alert(`Te queda $${presupuestoInicial} en tu presupuesto para la categoría '${categoriaPresupuesto}' durante el período '${tipoPeriodo}'.`);
     }
 }
+
 
 
 //AHORROS
