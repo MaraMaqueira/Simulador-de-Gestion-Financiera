@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión Financiera</title>
     <script src="PreEntrega2Maqueira.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,8 +44,10 @@
 <body>
     <h1>Gestión Financiera</h1>
 
-    <h2>Ingresos</h2>
+    <h2>Agregar Ingreso</h2>
     <button class="button" onclick="agregaringresos()">Agregar Ingreso</button>
+    <button class="button" onclick="eliminaringresos()">Eliminar Ingreso</button>
+    <button class="button" onclick="editaringresos()">Editar Ingreso</button>
 
     <h1>Tabla de Ingresos</h1>
     <table id="tablaIngresos" border="1">
@@ -56,7 +59,7 @@
                 <th>Fecha</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody-ingresos">
             <tr>
                 <td>Salario</td>
                 <td>Ingreso mensual</td>
@@ -72,8 +75,10 @@
         </tbody>
     </table>
 
-    <h2>Gastos</h2>
+    <h2>Agregar Gasto</h2>
     <button class="button" onclick="agregargastos()">Agregar Gasto</button>
+    <button class="button" onclick="eliminargastos()">Eliminar Gasto</button>
+    <button class="button" onclick="editargastos()">Editar Gasto</button>
 
     <h1>Tabla de Gastos</h1>
     <table id="tablaGastos" border="1">
@@ -85,62 +90,20 @@
                 <th>Fecha</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody-gastos">
             <tr>
                 <td>Comida</td>
                 <td>Compra de supermercado</td>
-                <td>2000</td>
-                <td>26/10/2024</td>
+                <td>200</td>
+                <td>02/10/2024</td>
             </tr>
             <tr>
                 <td>Transporte</td>
-                <td>Pasaje del autobus</td>
+                <td>Pase del bus</td>
                 <td>50</td>
-                <td>26/10/2024</td>
+                <td>10/10/2024</td>
             </tr>
         </tbody>
     </table>
-
-    <script>
-        const ingresos = [
-            { Categoria: "Salario", Descripcion: "Ingreso mensual", Monto: 45000, Fecha: "01/10/2024" },
-            { Categoria: "Freelance", Descripcion: "Trabajo extra", Monto: 5000, Fecha: "15/10/2024" }
-        ];
-
-        const gastos = [
-            { Categoria: "Comida", Descripcion: "Compra de supermercado", Monto: 200, Fecha: "26/10/2024" },
-            { Categoria: "Transporte", Descripcion: "Pase del bus", Monto: 50, Fecha: "26/10/2024" }
-        ];
-
-        const categoriasGastos = ["Comida", "Transporte", "Entretenimiento"]; 
-
-
-
-
-        
-        window.onload = function() {
-            actualizarTablaIngresos();
-            actualizarTablaGastos();
-        };
-    
-    </script>
 </body>
 </html>
-<div>
-    <h2>Gestión de Ingresos</h2>
-    <button onclick="crearCategoria()">Crear Categoría de Ingresos</button>
-    <button onclick="buscarIngresosPorNombre()">Buscar Ingresos por Nombre</button>
-    <button onclick="filtrarIngresosPorCategoria()">Filtrar Ingresos por Categoría</button>
-    <button onclick="filtrarIngresosPorFecha()">Filtrar Ingresos por Fecha</button>
-    <button onclick="ingresosDesdeHasta()">Ingresos Desde - Hasta</button>
-    <button onclick="ingresosDelMesActual()">Ingresos del Mes Actual</button>
-</div>
-<div>
-<h2>Gestión de Gastos</h2>
-    <button onclick="crearCategoriaGastos()">Crear Categoría de Gastos</button>
-    <button onclick="buscarGastosPorNombre()">Buscar Gastos por Nombre</button>
-    <button onclick="filtrarGastosPorCategoria()">Filtrar Gastos por Categoría</button>
-    <button onclick="filtrarGastosPorFecha()">Filtrar Gastos por Fecha</button>
-    <button onclick="gastosDesdeHasta()">Ingresos Desde - Hasta</button>
-    <button onclick="gastosDelMesActual()">Ingresos del Mes Actual</button>
-</div>
