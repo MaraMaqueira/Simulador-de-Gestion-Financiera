@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -104,8 +105,16 @@
         function register(event) {
             event.preventDefault();
 
-            const nombredeusuario = document.getElementById('nombredeusuario').value.trim();
-            const contraseña = document.getElementById('contraseña').value.trim();
+            const nombredeusuarioInput = document.getElementById('nombredeusuario');
+            const contraseñaInput = document.getElementById('contraseña');
+
+            if (!nombredeusuarioInput || !contraseñaInput) {
+                throw new Error("No se encontraron los campos de nombre de usuario y contraseña.");
+            }
+
+            const nombredeusuario = nombredeusuarioInput.value.trim();
+            const contraseña = contraseñaInput.value.trim();
+
 
             if (!nombredeusuario || !contraseña) {
                 document.getElementById('error').textContent = "Por favor, complete todos los campos.";
