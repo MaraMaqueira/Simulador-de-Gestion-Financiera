@@ -86,18 +86,22 @@
     <main class="main-content">
         <div class="button-container">
             <button class="big-button" onclick="window.location.href='registrar.html'" aria-label="Registrar Gastos e Ingresos">
+                <span class="button-icon"> </span>
                 <span class="button-icon">💰</span>
                 <span class="button-text">Registrar Gastos e Ingresos</span>
             </button>
             <button class="big-button" onclick="window.location.href='preyaho.html'" aria-label="Presupuestos y Ahorros">
+                <span class="button-icon"> </span>
                 <span class="button-icon">💼</span>
                 <span class="button-text">Presupuestos y Ahorros</span>
             </button>
             <button class="big-button" onclick="window.location.href='analisis.html'" aria-label="Análisis Financiero">
+                <span class="button-icon"> </span>
                 <span class="button-icon">📊</span>
                 <span class="button-text">Análisis</span>
             </button>
             <button class="big-button" onclick="window.location.href='conversor.html'" aria-label="Conversor de monedas">
+                <span class="button-icon"> </span>
                 <span class="button-icon">💱</span>
                 <span class="button-text">Conversor de monedas</span>
             </button>
@@ -105,19 +109,19 @@
     </main>
 
     <script>
-        const nombreUsuario = localStorage.getItem('nombreUsuario');
-        const userInfoElement = document.getElementById('user-info');
-        if (nombreUsuario) {
-            userInfoElement.textContent = `¡Hola, ${nombreUsuario}!`;
-        } else {
-            alert('Debe iniciar sesión para acceder a esta página.');
-            window.location.href = 'index.html';
-        }
-        function logout() {
-            localStorage.removeItem('nombreUsuario'); 
-            window.location.href = 'index.html'; 
-        }
-    </script>
-</body>
-</html>
-
+try {
+    const nombreUsuario = localStorage.getItem('nombreUsuario');
+    const userInfoElement = document.getElementById('user-info');
+    if (nombreUsuario) {
+        userInfoElement.textContent = ` Hola, ${nombreUsuario}!`;
+    } else {
+        alert('Debe iniciar sesión para acceder a esta página.');
+        window.location.href = 'index.html';
+    }
+    function logout() {
+        localStorage.removeItem('nombreUsuario'); 
+        window.location.href = 'index.html'; 
+    }
+} catch (error) {
+    console.error('Error:', error);
+}
