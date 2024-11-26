@@ -180,43 +180,55 @@
         let ultimoIDAhorro = parseInt(localStorage.getItem('ultimoIDAhorro')) || 1;
 
         function abrirModal(id) {
-            document.getElementById(id).style.display = 'flex';
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'flex';
+            }
         }
 
         function cerrarModal(id) {
-            document.getElementById(id).style.display = 'none';
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         function guardarPresupuesto() {
-            const categoria = document.getElementById('categoriaPresupuesto').value;
+            const categoria = document.getElementById('categoriaPresupuesto').value.trim();
             const monto = parseFloat(document.getElementById('montoPresupuesto').value);
-            const intervalo = document.getElementById('intervaloPresupuesto').value;
+            const intervalo = document.getElementById('intervaloPresupuesto').value.trim();
             const fechaInicio = document.getElementById('fechaPresupuesto').value;
 
-            if (categoria && monto && intervalo && fechaInicio) {
-                presupuestos.push({ ID: ultimoIDPresupuesto++, categoria, monto, intervalo, fechaInicio });
-                actualizarLocalStorage();
-                actualizarTablaPresupuestos();
-                cerrarModal('modalPresupuesto');
-            } else {
-                alert("Por favor, complete todos los campos.");
+            if (isNaN(monto) || !categoria || !intervalo || !fechaInicio) {
+                return;
             }
+
+            presupuestos.push({ ID: ultimoIDPresupuesto++, categoria, monto, intervalo, fechaInicio });
+            actualizarLocalStorage();
+            actualizarTablaPresupuestos();
+            cerrarModal('modalPresupuesto');
         }
 
         function guardarAhorro() {
-            const objetivo = document.getElementById('objetivoAhorro').value;
+            const objetivo = document.getElementById('objetivoAhorro').value.trim();
             const montoGuardado = parseFloat(document.getElementById('montoAhorro').value) || 0;
             const meta = parseFloat(document.getElementById('metaAhorro').value);
 
-            if (objetivo && meta) {
-                ahorros.push({ ID: ultimoIDAhorro++, objetivo, montoGuardado, meta });
-                actualizarLocalStorage();
-                actualizarTablaAhorros();
-                actualizarProgresoTotal();
-                cerrarModal('modalAhorro');
-            } else {
-                alert("Por favor, complete todos los campos.");
+            if (!objetivo || isNaN(meta) || meta <= 0) {
+                alert("Por favor, ingrese un objetivo válido y una meta mayor que cero.");
+                return;
             }
+
+            ahorros.push({ ID: ultimoIDAhorro++, objetivo, montoGuardado, meta });
+            actualizarLocalStorage();
+            actualizarTablaAhorros();
+            actualizarProgresoTotal();
+            cerrarModal('modalAhorro');
+
+            // Limpiar los campos del formulario
+            document.getElementById('objetivoAhorro').value = '';
+            document.getElementById('montoAhorro').value = '';
+            document.getElementById('metaAhorro').value = '';
         }
 
         function actualizarLocalStorage() {
@@ -227,59 +239,59 @@
         }
 
         function actualizarTablaPresupuestos() {
-            const tbody = document.getElementById('tablaPresupuestos').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = '';
-            presupuestos.forEach(p => {
-                const row = tbody.insertRow();
+            const tabla = document.getElementById('tablaPresupuestos').getElementsByTagName('tbody')[0];
+            tabla.innerHTML = '';
+            presupuestos.forEach((presupuesto) => {
+                const row = tabla.insertRow();
                 row.innerHTML = `
-                    <td>${p.categoria}</td>
-                    <td>${p.monto}</td>
-                    <td>${p.intervalo}</td>
-                    <td>${p.fechaInicio}</td>
-                    <td><button onclick="eliminarPresupuesto(${p.ID})">Eliminar</button></td>
-                `;
-            });
-        }
-
-        function actualizarTablaAhorros() {
-            const tbody = document.getElementById('tablaAhorros').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = '';
-            ahorros.forEach(a => {
-                const progreso = ((a.montoGuardado / a.meta) * 100).toFixed(2);
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${a.objetivo}</td>
-                    <td>${a.montoGuardado}</td>
-                    <td>${a.meta}</td>
-                    <td>${progreso}%</td>
-                    <td><button onclick="eliminarAhorro(${a.ID})">Eliminar</button></td>
+                    <td>${presupuesto.categoria}</td>
+                    <td>${presupuesto.monto}</td>
+                    <td>${presupuesto.intervalo}</td>
+                    <td>${presupuesto.fechaInicio}</td>
+                    <td><button class="button" onclick="eliminarPresupuesto(${presupuesto.ID})">Eliminar</button></td>
                 `;
             });
         }
 
         function eliminarPresupuesto(id) {
-            presupuestos = presupuestos.filter(p => p.ID !== id);
+            presupuestos = presupuestos.filter((presupuesto) => presupuesto.ID !== id);
             actualizarLocalStorage();
             actualizarTablaPresupuestos();
         }
 
+        function actualizarTablaAhorros() {
+            const tabla = document.getElementById('tablaAhorros').getElementsByTagName('tbody')[0];
+            tabla.innerHTML = '';
+            ahorros.forEach((ahorro) => {
+                const row = tabla.insertRow();
+                const progreso = (ahorro.montoGuardado / ahorro.meta) * 100;
+                row.innerHTML = `
+                    <td>${ahorro.objetivo}</td>
+                    <td>${ahorro.montoGuardado}</td>
+                    <td>${ahorro.meta}</td>
+                    <td>${progreso.toFixed(2)}%</td>
+                    <td><button class="button" onclick="eliminarAhorro(${ahorro.ID})">Eliminar</button></td>
+                `;
+            });
+        }
+
         function eliminarAhorro(id) {
-            ahorros = ahorros.filter(a => a.ID !== id);
+            ahorros = ahorros.filter((ahorro) => ahorro.ID !== id);
             actualizarLocalStorage();
             actualizarTablaAhorros();
             actualizarProgresoTotal();
         }
 
         function actualizarProgresoTotal() {
-            const totalAhorros = ahorros.reduce((acc, a) => acc + a.montoGuardado, 0);
+            const totalAhorros = ahorros.reduce((total, ahorro) => total + ahorro.montoGuardado, 0);
             document.getElementById('progress').innerText = `Progreso Total de Ahorros: $${totalAhorros.toFixed(2)}`;
         }
 
-        window.onload = () => {
-            actualizarTablaPresupuestos();
-            actualizarTablaAhorros();
-            actualizarProgresoTotal();
-        }
+        // Cargar la tabla y progreso al iniciar
+        actualizarTablaPresupuestos();
+        actualizarTablaAhorros();
+        actualizarProgresoTotal();
     </script>
 </body>
 </html>
+
