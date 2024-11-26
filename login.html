@@ -106,6 +106,11 @@
             const nombredeusuario = document.getElementById('nombredeusuario').value.trim();
             const contraseña = document.getElementById('contraseña').value.trim();
 
+            if (!nombredeusuario || !contraseña) {
+                document.getElementById('error').textContent = "Por favor, complete todos los campos.";
+                return;
+            }
+
             const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
             const usuarioEncontrado = usuarios.find(u => u.nombredeusuario === nombredeusuario);
 
