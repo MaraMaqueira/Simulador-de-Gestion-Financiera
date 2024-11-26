@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas Claras</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Tu CSS aquí */
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #3a7bc8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #totalDinero {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Finanzas Claras</h1>
+        <h2>Registro de Ingresos, Gastos y Transferencias</h2>
+        <div class="button-group">
+            <button class="button" onclick="mostrarFormulario('ingreso')">Agregar Ingreso</button>
+            <button class="button" onclick="mostrarFormulario('gasto')">Agregar Gasto</button>
+            <button class="button" onclick="mostrarFormulario('transferencia')">Agregar Transferencia</button>
+        </div>
+        <table id="tablaRegistros">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="totalDinero">Dinero Total: $0.00</div>
+    </div>
+    <script>
+        let IngresosGastosTransferencias = JSON.parse(localStorage.getItem('registros')) || [];
+        let ultimoID = localStorage.getItem('ultimoID') ? parseInt(localStorage.getItem('ultimoID')) : 1;
+
+        function mostrarFormulario(tipo) {
+            Swal.fire({
+                title: `Agregar ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`,
+                html: `
+                    <label for="categoria">Categoría:</label>
+                    <input type="text" id="categoria" class="swal2-input" placeholder="Ej. Comida" required>
+                    <label for="monto">Monto:</label>
+                    <input type="number" id="monto" class="swal2-input" placeholder="Ej. 500" min="0" required>
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" id="descripcion" class="swal2-input" placeholder="Ej. Compra de alimentos" required>
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" class="swal2-input" required>
+                `,
+                confirmButtonText: 'Guardar',
+                showCancelButton: true,
+                preConfirm: () => {
+                    const categoria = document.getElementById('categoria').value.trim();
+                    const monto = parseFloat(document.getElementById('monto').value);
+                    const descripcion = document.getElementById('descripcion').value.trim();
+                    const fecha = document.getElementById('fecha').value;
+
+                    if (!categoria || !descripcion || !fecha || isNaN(monto) || monto <= 0) {
+                        Swal.showValidationMessage('Por favor, complete todos los campos correctamente.');
+                        return false;
+                    }
+
+                    return { categoria, monto, descripcion, fecha };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const registro = { 
+                        ID: ultimoID++, 
+                        tipo, 
+                        ...result.value 
+                    };
+                    IngresosGastosTransferencias.push(registro);
+                    actualizarLocalStorage();
+                    actualizarTablaRegistros();
+                    calcularTotalDinero();
+                    Swal.fire('¡Registro Agregado!', '', 'success');
+                }
+            });
+        }
+
+        function actualizarTablaRegistros() {
+            const tablaBody = document.getElementById("tablaRegistros").getElementsByTagName("tbody")[0];
+            tablaBody.innerHTML = "";
+
+            IngresosGastosTransferencias.forEach(registro => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${registro.ID}</td>
+                    <td>${registro.tipo}</td>
+                    <td>${registro.categoria}</td>
+                    <td>${registro.descripcion}</td>
+                    <td>${registro.monto.toFixed(2)}</td>
+                    <td>${registro.fecha}</td>
+                    <td>
+                        <button class="button" onclick="eliminarRegistro(${registro.ID})">Eliminar</button>
+                    </td>
+                `;
+                tablaBody.appendChild(fila);
+            });
+        }
+
+        function calcularTotalDinero() {
+            let total = 0;
+            IngresosGastosTransferencias.forEach(registro => {
+                total += registro.tipo === "ingreso" ? registro.monto : -registro.monto;
+            });
+            document.getElementById("totalDinero").textContent = `Dinero Total: $${total.toFixed(2)}`;
+        }
+
+        function actualizarLocalStorage() {
+            localStorage.setItem('registros', JSON.stringify(IngresosGastosTransferencias));
+            localStorage.setItem('ultimoID', ultimoID);
+        }
+
+        window.onload = function () {
+            actualizarTablaRegistros();
+            calcularTotalDinero();
+        };
+    </script>
+</body>
+</html>

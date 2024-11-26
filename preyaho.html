@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Presupuestos y Ahorros</title>
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-hover: #4cae4c;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --border-color: #ccc;
+            --header-bg: #e2e2e2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--header-bg);
+        }
+
+        .button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #progress {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-content input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .modal-content button {
+            width: 100%;
+        }
+
+        .close-button {
+            background-color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Presupuestos y Ahorros</h1>
+
+        <h2>Registro de Presupuestos</h2>
+        <button class="button" onclick="abrirModal('modalPresupuesto')">Agregar Presupuesto</button>
+        <table id="tablaPresupuestos">
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Monto</th>
+                    <th>Intervalo</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Registro de Ahorros</h2>
+        <button class="button" onclick="abrirModal('modalAhorro')">Agregar Ahorro</button>
+        <table id="tablaAhorros">
+            <thead>
+                <tr>
+                    <th>Objetivo</th>
+                    <th>Monto Guardado</th>
+                    <th>Meta</th>
+                    <th>Progreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div id="progress">Progreso Total de Ahorros: $0.00</div>
+    </div>
+
+    <div id="modalPresupuesto" class="modal">
+        <div class="modal-content">
+            <h3>Agregar Presupuesto</h3>
+            <input type="text" id="categoriaPresupuesto" placeholder="Categoría" />
+            <input type="number" id="montoPresupuesto" placeholder="Monto" />
+            <input type="text" id="intervaloPresupuesto" placeholder="Intervalo (diario, semanal, mensual)" />
+            <input type="date" id="fechaPresupuesto" />
+            <button class="button" onclick="guardarPresupuesto()">Guardar</button>
+            <button class="button close-button" onclick="cerrarModal('modalPresupuesto')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalAhorro" class="modal">
+        <div class="modal-content">
+            <h3>Agregar Ahorro</h3>
+            <input type="text" id="objetivoAhorro" placeholder="Objetivo" />
+            <input type="number" id="montoAhorro" placeholder="Monto Inicial (opcional)" />
+            <input type="number" id="metaAhorro" placeholder="Meta" />
+            <button class="button" onclick="guardarAhorro()">Guardar</button>
+            <button class="button close-button" onclick="cerrarModal('modalAhorro')">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        let presupuestos = JSON.parse(localStorage.getItem('presupuestos')) || [];
+        let ahorros = JSON.parse(localStorage.getItem('ahorros')) || [];
+        let ultimoIDPresupuesto = parseInt(localStorage.getItem('ultimoIDPresupuesto')) || 1;
+        let ultimoIDAhorro = parseInt(localStorage.getItem('ultimoIDAhorro')) || 1;
+
+        function abrirModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function cerrarModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function guardarPresupuesto() {
+            const categoria = document.getElementById('categoriaPresupuesto').value;
+            const monto = parseFloat(document.getElementById('montoPresupuesto').value);
+            const intervalo = document.getElementById('intervaloPresupuesto').value;
+            const fechaInicio = document.getElementById('fechaPresupuesto').value;
+
+            presupuestos.push({ ID: ultimoIDPresupuesto++, categoria, monto, intervalo, fechaInicio });
+            actualizarLocalStorage();
+            actualizarTablaPresupuestos();
+            cerrarModal('modalPresupuesto');
+        }
+
+        function guardarAhorro() {
+            const objetivo = document.getElementById('objetivoAhorro').value;
+            const montoGuardado = parseFloat(document.getElementById('montoAhorro').value) || 0;
+            const meta = parseFloat(document.getElementById('metaAhorro').value);
+
+            ahorros.push({ ID: ultimoIDAhorro++, objetivo, montoGuardado, meta });
+            actualizarLocalStorage();
+            actualizarTablaAhorros();
+            actualizarProgresoTotal();
+            cerrarModal('modalAhorro');
+        }
+
+        function actualizarLocalStorage() {
+            localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
+            localStorage.setItem('ahorros', JSON.stringify(ahorros));
+            localStorage.setItem('ultimoIDPresupuesto', ultimoIDPresupuesto);
+            localStorage.setItem('ultimoIDAhorro', ultimoIDAhorro);
+        }
+
+
+        actualizarTablaPresupuestos();
+        actualizarTablaAhorros();
+        actualizarProgresoTotal();
+    </script>
+</body>
+</html>

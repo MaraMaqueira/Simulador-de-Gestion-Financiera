@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas Claras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ededed;
+        }
+        .header {
+            background-color: #051d40;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+        .user-info {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logout-button {
+            padding: 8px 16px;
+            background-color: #c0392b;
+            color: #ededed;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 70px);
+        }
+        .button-container {
+            display: flex;
+            gap: 40px;
+        }
+        .big-button {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .big-button:hover {
+            transform: translateY(-5px);
+        }
+        .button-icon {
+            font-size: 56px;
+            margin-bottom: 10px;
+        }
+        .button-text {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <img src="logo.jpeg" alt="Logo Finanzas Claras" class="logo">
+        <div id="user-info" class="user-info"></div>
+        <button class="logout-button" onclick="logout()">Cerrar sesión</button>
+    </header>
+    
+    <main class="main-content">
+        <div class="button-container">
+            <button class="big-button" onclick="window.location.href='registrar.html'" aria-label="Registrar Gastos e Ingresos">
+                <span class="button-icon">💰</span>
+                <span class="button-text">Registrar Gastos e Ingresos</span>
+            </button>
+            <button class="big-button" onclick="window.location.href='preyaho.html'" aria-label="Presupuestos y Ahorros">
+                <span class="button-icon">💼</span>
+                <span class="button-text">Presupuestos y Ahorros</span>
+            </button>
+            <button class="big-button" onclick="window.location.href='analisis.html'" aria-label="Análisis Financiero">
+                <span class="button-icon">📊</span>
+                <span class="button-text">Análisis</span>
+            </button>
+            <button class="big-button" onclick="window.location.href='conversor.html'" aria-label="Conversor de monedas">
+                <span class="button-icon">💱</span>
+                <span class="button-text">Conversor de monedas</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const nombreUsuario = localStorage.getItem('nombreUsuario');
+        const userInfoElement = document.getElementById('user-info');
+        if (nombreUsuario) {
+            userInfoElement.textContent = `¡Hola, ${nombreUsuario}!`;
+        } else {
+            alert('Debe iniciar sesión para acceder a esta página.');
+            window.location.href = 'index.html';
+        }
+        function logout() {
+            localStorage.removeItem('nombreUsuario'); 
+            window.location.href = 'index.html'; 
+        }
+    </script>
+</body>
+</html>
+
