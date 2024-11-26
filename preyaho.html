@@ -193,10 +193,14 @@
             const intervalo = document.getElementById('intervaloPresupuesto').value;
             const fechaInicio = document.getElementById('fechaPresupuesto').value;
 
-            presupuestos.push({ ID: ultimoIDPresupuesto++, categoria, monto, intervalo, fechaInicio });
-            actualizarLocalStorage();
-            actualizarTablaPresupuestos();
-            cerrarModal('modalPresupuesto');
+            if (categoria && monto && intervalo && fechaInicio) {
+                presupuestos.push({ ID: ultimoIDPresupuesto++, categoria, monto, intervalo, fechaInicio });
+                actualizarLocalStorage();
+                actualizarTablaPresupuestos();
+                cerrarModal('modalPresupuesto');
+            } else {
+                alert("Por favor, complete todos los campos.");
+            }
         }
 
         function guardarAhorro() {
@@ -204,11 +208,15 @@
             const montoGuardado = parseFloat(document.getElementById('montoAhorro').value) || 0;
             const meta = parseFloat(document.getElementById('metaAhorro').value);
 
-            ahorros.push({ ID: ultimoIDAhorro++, objetivo, montoGuardado, meta });
-            actualizarLocalStorage();
-            actualizarTablaAhorros();
-            actualizarProgresoTotal();
-            cerrarModal('modalAhorro');
+            if (objetivo && meta) {
+                ahorros.push({ ID: ultimoIDAhorro++, objetivo, montoGuardado, meta });
+                actualizarLocalStorage();
+                actualizarTablaAhorros();
+                actualizarProgresoTotal();
+                cerrarModal('modalAhorro');
+            } else {
+                alert("Por favor, complete todos los campos.");
+            }
         }
 
         function actualizarLocalStorage() {
@@ -218,10 +226,60 @@
             localStorage.setItem('ultimoIDAhorro', ultimoIDAhorro);
         }
 
+        function actualizarTablaPresupuestos() {
+            const tbody = document.getElementById('tablaPresupuestos').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            presupuestos.forEach(p => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${p.categoria}</td>
+                    <td>${p.monto}</td>
+                    <td>${p.intervalo}</td>
+                    <td>${p.fechaInicio}</td>
+                    <td><button onclick="eliminarPresupuesto(${p.ID})">Eliminar</button></td>
+                `;
+            });
+        }
 
-        actualizarTablaPresupuestos();
-        actualizarTablaAhorros();
-        actualizarProgresoTotal();
+        function actualizarTablaAhorros() {
+            const tbody = document.getElementById('tablaAhorros').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            ahorros.forEach(a => {
+                const progreso = ((a.montoGuardado / a.meta) * 100).toFixed(2);
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${a.objetivo}</td>
+                    <td>${a.montoGuardado}</td>
+                    <td>${a.meta}</td>
+                    <td>${progreso}%</td>
+                    <td><button onclick="eliminarAhorro(${a.ID})">Eliminar</button></td>
+                `;
+            });
+        }
+
+        function eliminarPresupuesto(id) {
+            presupuestos = presupuestos.filter(p => p.ID !== id);
+            actualizarLocalStorage();
+            actualizarTablaPresupuestos();
+        }
+
+        function eliminarAhorro(id) {
+            ahorros = ahorros.filter(a => a.ID !== id);
+            actualizarLocalStorage();
+            actualizarTablaAhorros();
+            actualizarProgresoTotal();
+        }
+
+        function actualizarProgresoTotal() {
+            const totalAhorros = ahorros.reduce((acc, a) => acc + a.montoGuardado, 0);
+            document.getElementById('progress').innerText = `Progreso Total de Ahorros: $${totalAhorros.toFixed(2)}`;
+        }
+
+        window.onload = () => {
+            actualizarTablaPresupuestos();
+            actualizarTablaAhorros();
+            actualizarProgresoTotal();
+        }
     </script>
 </body>
 </html>
