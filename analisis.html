@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -99,21 +98,44 @@
     <script>
         const registros = JSON.parse(localStorage.getItem('registros')) || [];
 
+
         function calcularEstadisticas() {
             let totalIngresos = 0;
             let totalGastos = 0;
 
+            if (!registros) {
+                console.error("No hay registros para calcular estadísticas");
+                return;
+            }
+
             registros.forEach(registro => {
+                if (!registro) {
+                    console.error("Registro nulo en la lista de registros");
+                    return;
+                }
+
                 if (registro.tipo === "ingreso") {
+                    if (typeof registro.monto !== "number") {
+                        console.error(`El monto del registro ${registro.id} no es un número`);
+                        return;
+                    }
                     totalIngresos += registro.monto;
                 } else if (registro.tipo === "gasto") {
+                    if (typeof registro.monto !== "number") {
+                        console.error(`El monto del registro ${registro.id} no es un número`);
+                        return;
+                    }
                     totalGastos += registro.monto;
                 }
             });
 
             const balance = totalIngresos - totalGastos;
 
+            if (typeof balance !== "number") {
+                console.error("El balance no es un número");
             document.getElementById("totalIngresos").textContent = `$${totalIngresos.toFixed(2)}`;
+            }
+
             document.getElementById("totalGastos").textContent = `$${totalGastos.toFixed(2)}`;
             document.getElementById("balance").textContent = `$${balance.toFixed(2)}`;
         }
