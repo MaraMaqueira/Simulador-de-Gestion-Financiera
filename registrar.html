@@ -181,6 +181,25 @@
             });
         }
 
+        function eliminarRegistro(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Este registro será eliminado permanentemente!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    IngresosGastosTransferencias = IngresosGastosTransferencias.filter(registro => registro.ID !== id);
+                    actualizarLocalStorage();
+                    actualizarTablaRegistros();
+                    calcularTotalDinero();
+                    Swal.fire('¡Registro Eliminado!', '', 'success');
+                }
+            });
+        }
+
         function calcularTotalDinero() {
             let total = 0;
             IngresosGastosTransferencias.forEach(registro => {
@@ -201,3 +220,4 @@
     </script>
 </body>
 </html>
+
